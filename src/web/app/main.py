@@ -19,15 +19,13 @@ class SmartLight:
 
     def _get_bulb(self):
         """Безопасное получение объекта лампы"""
-        if self.bulb is not None:
-            return self.bulb
         try:
-            self.bulb = Bulb(self.bulb_ip, effect="smooth", duration=500)
+            bulb = Bulb(self.bulb_ip, effect="smooth", duration=500)
             print(f"🔌 Подключено к лампе {self.bulb_ip}")
+            return bulb
         except Exception as e:
             print(f"⚠️ Ошибка подключения к лампе: {e}")
-            self.bulb = None
-        return self.bulb
+            return None
 
 
 class CommandModel(BaseModel):
@@ -38,6 +36,24 @@ class CommandModel(BaseModel):
 async def handle_command(request: Request, data: CommandModel) -> CommandModel:
     return data
 
+@get("/api/v1/light/on")
+async def light_on(request: Request) -> dict[str, str]:
+    light = SmartLight(bulb_ip=BULB_IP, port=BULB_PORT)
+    if light is None:
+        return {"msg": "Соединения нет"}
+    else:
+        light.bulb.turn_on()
+        return {"msg": "Соединение есть"}
+
+@get("/api/v1/light/off")
+async def light_off(request: Request) -> dict[str, str]:
+    light = SmartLight(bulb_ip=BULB_IP, port=BULB_PORT)
+    if light is None:
+        return {"msg": "Соединения нет"}
+    else:
+        light.bulb.turn_off()
+        return {"msg": "Соединение есть"}
+    
 
 @get("/api/v1/light")
 async def status_light(request: Request) -> dict[str, str]:
@@ -54,11 +70,12 @@ async def main_page() -> Template:
 
 
 app = Litestar(
-    route_handlers=[handle_command, main_page],
+    route_handlers=[handle_command, main_page, status_light, light_off, light_on],
     template_config=TemplateConfig(
         directory=Path("templates"),
         engine=JinjaTemplateEngine,
     ),
+    debug=True
 )
 
 
