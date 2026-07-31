@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Умный свет</title>
+</head>
+<body>
+    <h1>💡 Управление светом</h1>
+    
+    <p id="status">Статус: загрузка...</p>
+    
+    <button onclick="send('on')">🔆 Включить</button>
+    <button onclick="send('off')">⛔️ Выключить</button>
+    
+    <script>
+        // Обновление статуса
+        async function updateStatus() {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            document.getElementById('status').textContent = 
+                'Статус: ' + (data.is_on ? '✅ ВКЛЮЧЕН' : '❌ ВЫКЛЮЧЕН');
+        }
+        
+        // Отправка команды
+        async function send(action) {
+            await fetch('/api/' + action, { method: 'POST' });
+            updateStatus();
+        }
+        
+        // Обновляем каждые 2 секунды
+        updateStatus();
+        setInterval(updateStatus, 2000);
+    </script>
+</body>
+</html>
