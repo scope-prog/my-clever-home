@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────
+#  Python
+# ─────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# uv / pip
+.uv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Тесты и линтеры
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# ─────────────────────────────────────────────
+#  Секреты и локальная конфигурация
+# ─────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.local
+secrets.json
+credentials.json
+
+# ─────────────────────────────────────────────
+#  Логи и базы данных
+# ─────────────────────────────────────────────
+*.log
+logs/
+*.sqlite
+*.sqlite3
+*.db
+
+# ─────────────────────────────────────────────
+#  Arduino / PlatformIO / ESP32
+# ─────────────────────────────────────────────
+.pio/
+.pioenvs/
+.piolibdeps/
+build/
+*.bin
+*.elf
+*.hex
+*.map
+
+# ─────────────────────────────────────────────
+#  Редакторы и IDE
+# ─────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.cursorignore
+
+# ─────────────────────────────────────────────
+#  macOS
+# ─────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+Icon
+
+# ─────────────────────────────────────────────
+#  Windows / Linux
+# ─────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.directory
+.fuse_hidden*
+.nfs*
