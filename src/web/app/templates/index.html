@@ -11,19 +11,25 @@
     
     <button onclick="send('on')">🔆 Включить</button>
     <button onclick="send('off')">⛔️ Выключить</button>
-    
+
+
+    <!-- тут мусор был я убрал -->
+
     <script>
-        // Обновление статуса
+        // Обновление статуса, тут была ошибка типо мы запрашивали is_on и по логике там должно было быть true или false, но там будет msg как написано на бэкенде
+        // так что проверяю не is_on а data.msg
         async function updateStatus() {
-            const res = await fetch('/api/status');
+            const res = await fetch('/api/v1/light');
             const data = await res.json();
             document.getElementById('status').textContent = 
-                'Статус: ' + (data.is_on ? '✅ ВКЛЮЧЕН' : '❌ ВЫКЛЮЧЕН');
+                'Статус: ' + (data.msg === "Соединение есть" ? '✅ НА СВЯЗИ' : '❌ НЕТ СВЯЗИ');
+
         }
         
+        // тут был адрес /api/ а нужно /api/v1/light/ , а еще был метод post а надо get
         // Отправка команды
         async function send(action) {
-            await fetch('/api/' + action, { method: 'POST' });
+            await fetch('/api/v1/light/' + action, { method: 'GET' });
             updateStatus();
         }
         
