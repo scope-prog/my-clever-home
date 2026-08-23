@@ -18,14 +18,20 @@ class SmartLight:
         self.bulb: Bulb | None = self._get_bulb()
 
     def _get_bulb(self):
-        """Безопасное получение объекта лампы"""
+        """Честное получение объекта лампы с проверкой связи"""
         try:
             bulb = Bulb(self.bulb_ip, effect="smooth", duration=500)
-            print(f"🔌 Подключено к лампе {self.bulb_ip}")
+            
+            # Стучимся к лампе — запрашиваем её свойства. 
+            # Если она выключена из розетки, тут всё упадет в except
+            bulb.get_properties() 
+            
+            print(f"🔌 Реальное подключение к лампе {self.bulb_ip} установлено!")
             return bulb
         except Exception as e:
-            print(f"⚠️ Ошибка подключения к лампе: {e}")
+            print(f"⚠️ Ошибка: Лампа {self.bulb_ip} недоступна (выключена из розетки или не тот IP): {e}")
             return None
+
 
 
 class CommandModel(BaseModel):
@@ -39,7 +45,8 @@ async def handle_command(request: Request, data: CommandModel) -> CommandModel:
 @get("/api/v1/light/on")
 async def light_on(request: Request) -> dict[str, str]:
     light = SmartLight(bulb_ip=BULB_IP, port=BULB_PORT)
-    if light is None:
+    #вот тут и в таких же местах снизу короч нужно проверять не light а light.bulb
+    if light.bulb is None:
         return {"msg": "Соединения нет"}
     else:
         light.bulb.turn_on()
@@ -48,7 +55,7 @@ async def light_on(request: Request) -> dict[str, str]:
 @get("/api/v1/light/off")
 async def light_off(request: Request) -> dict[str, str]:
     light = SmartLight(bulb_ip=BULB_IP, port=BULB_PORT)
-    if light is None:
+    if light.bulb is None:
         return {"msg": "Соединения нет"}
     else:
         light.bulb.turn_off()
@@ -58,7 +65,7 @@ async def light_off(request: Request) -> dict[str, str]:
 @get("/api/v1/light")
 async def status_light(request: Request) -> dict[str, str]:
     light = SmartLight(bulb_ip=BULB_IP, port=BULB_PORT)
-    if light is None:
+    if light.bulb is None:
         return {"msg": "Соединения нет"}
     else:
         return {"msg": "Соединение есть"}
