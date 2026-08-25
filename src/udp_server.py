@@ -99,6 +99,12 @@ def udp_listener():
                 elif command == "motion_on":
                     motion_enabled = True
                     print("📡 Датчик движения: ВКЛ")
+                elif command == "motion_status":
+                    # Отправляем статус обратно на M5Stick
+                    status = "ON" if motion_enabled else "OFF"
+                    response = json.dumps({"status": "ok", "motion_enabled": motion_enabled, "message": f"Sensor: {status}"})
+                    sock.sendto(response.encode('utf-8'), addr)
+                    print(f"📊 Статус отправлен: {status}")
             except json.JSONDecodeError:
                 print("❌ Ошибка: невалидный JSON")
         else:
